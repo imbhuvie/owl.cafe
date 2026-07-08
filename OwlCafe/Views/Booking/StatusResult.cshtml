@@ -1,0 +1,91 @@
+@model OwlCafe.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Status - Owl Cafe";
+    var badgeClass = Model.Status switch
+    {
+        OwlCafe.Models.BookingStatus.Approved => "success",
+        OwlCafe.Models.BookingStatus.Pending => "warning text-dark",
+        OwlCafe.Models.BookingStatus.Completed => "info text-dark",
+        OwlCafe.Models.BookingStatus.Cancelled => "secondary",
+        _ => "danger"
+    };
+}
+
+<section class="hero" style="height: 42vh; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+    <div class="hero-content">
+        <h1 class="text-accent">Booking Status</h1>
+        <p class="subtitle">Confirmation #@Model.Id.ToString("D8")</p>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card" style="background: rgba(255, 255, 255, 0.95); color: var(--text-dark);">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <h3 class="mb-2">Reservation for @Model.CustomerName</h3>
+                    <span class="badge bg-@badgeClass fs-6">@Model.Status</span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Date</strong>
+                        <p>@Model.BookingDate.ToString("dddd, MMMM d, yyyy")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Time</strong>
+                        <p>@Model.BookingTime.ToString("hh\\:mm")</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Guests</strong>
+                        <p>@Model.Guests</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Table</strong>
+                        <p>@(Model.Table == null ? "Not assigned yet" : $"Table {Model.Table.TableNumber} ({Model.Table.Capacity} seats)")</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.SpecialRequest))
+                {
+                    <div class="mb-3">
+                        <strong>Special Request</strong>
+                        <p>@Model.SpecialRequest</p>
+                    </div>
+                }
+
+                <div class="alert alert-info mb-4">
+                    @if (Model.Status == OwlCafe.Models.BookingStatus.Pending)
+                    {
+                        <span>Your reservation is waiting for admin approval.</span>
+                    }
+                    else if (Model.Status == OwlCafe.Models.BookingStatus.Approved)
+                    {
+                        <span>Your table is approved. Please arrive 10 minutes early.</span>
+                    }
+                    else if (Model.Status == OwlCafe.Models.BookingStatus.Rejected)
+                    {
+                        <span>This reservation was not approved. Please contact us or create a new booking.</span>
+                    }
+                    else if (Model.Status == OwlCafe.Models.BookingStatus.Completed)
+                    {
+                        <span>This reservation has been completed. Thank you for visiting Owl Cafe.</span>
+                    }
+                    else
+                    {
+                        <span>This reservation is cancelled.</span>
+                    }
+                </div>
+
+                <div class="text-center">
+                    <a href="@Url.Action("Status", "Booking")" class="btn btn-secondary">Check Another Booking</a>
+                    <a href="@Url.Action("Index", "Menu")" class="btn btn-primary">Browse Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

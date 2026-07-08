@@ -1,0 +1,62 @@
+@model IEnumerable<OwlCafe.Models.GalleryImage>
+
+@{
+    ViewData["Title"] = "Gallery Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5>Gallery Images</h5>
+    <a href="@Url.Action("Create", "Gallery", new { area = "Admin" })" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i> Add Image
+    </a>
+</div>
+
+<div class="admin-card p-4">
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var image in Model)
+                    {
+                        <tr>
+                            <td><strong>@image.Title</strong></td>
+                            <td>@image.Category</td>
+                            <td>@image.DisplayOrder</td>
+                            <td>
+                                <span class="badge bg-@(image.Status ? "success" : "danger")">
+                                    @(image.Status ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Gallery", new { area = "Admin", id = image.Id })" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="@Url.Action("Delete", "Gallery", new { area = "Admin" })" style="display:inline;">
+                                    <input type="hidden" name="id" value="@image.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No gallery images found.</p>
+    }
+</div>

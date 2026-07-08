@@ -1,0 +1,95 @@
+@model IEnumerable<OwlCafe.Models.MenuItem>
+
+@{
+    ViewData["Title"] = "Menu - Owl Cafe";
+}
+
+<!-- Menu Hero -->
+<section class="hero" style="height: 50vh; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+    <div class="hero-content">
+        <h1 class="text-accent">Our Menu</h1>
+        <p class="subtitle">Culinary Excellence in Every Dish</p>
+    </div>
+</section>
+
+<!-- Menu Content -->
+<section class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group d-flex flex-wrap justify-content-center">
+                <a href="@Url.Action("Index", "Menu")" class="btn btn-sm btn-primary">All Items</a>
+                @if (ViewData["Categories"] is IEnumerable<OwlCafe.Models.Category> categories)
+                {
+                    @foreach (var category in categories)
+                    {
+                        <a href="@Url.Action("Index", "Menu", new { categoryId = category.Id })" 
+                           class="btn btn-sm btn-primary">
+                            @category.Name
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="menu-card">
+                        <a class="menu-card-image" href="@Url.Action("Details", "Menu", new { id = item.Id })" aria-label="View @item.Name details">
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="@item.Image" alt="@item.Name" loading="lazy">
+                            }
+                            else
+                            {
+                                <div class="menu-image-placeholder">
+                                    <i class="fas fa-utensils fa-3x"></i>
+                                </div>
+                            }
+                        </a>
+                        <div class="menu-card-body">
+                            <div class="menu-card-category">@item.Category?.Name</div>
+                            <h3 class="menu-card-title">
+                                <a href="@Url.Action("Details", "Menu", new { id = item.Id })">@item.Name</a>
+                            </h3>
+                            <p class="menu-card-description">@item.Description</p>
+                            @if (item.PreparationTime > 0)
+                            {
+                                <small class="text-muted d-block mb-2">
+                                    <i class="fas fa-clock"></i> @item.PreparationTime mins
+                                </small>
+                            }
+                            <div class="menu-card-footer">
+                                @if (item.DiscountPrice.HasValue)
+                                {
+                                    <span>
+                                        <span class="menu-card-price">@item.DiscountPrice.Value.ToRupees()</span>
+                                        <small class="text-muted text-decoration-line-through ms-1">@item.Price.ToRupees()</small>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="menu-card-price">@item.Price.ToRupees()</span>
+                                }
+                                <span class="menu-card-badge @(item.IsVeg ? "badge-veg" : "badge-non-veg")">
+                                    @(item.IsVeg ? "Veg" : "Non-Veg")
+                                </span>
+                            </div>
+                            <a href="@Url.Action("Details", "Menu", new { id = item.Id })" class="btn btn-secondary btn-sm mt-3">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <p>No menu items available at the moment.</p>
+        </div>
+    }
+</section>

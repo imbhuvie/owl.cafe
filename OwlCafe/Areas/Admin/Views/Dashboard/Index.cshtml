@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="admin-card">
+            <div class="admin-stat">
+                <i class="fas fa-calendar fa-2x text-accent mb-2"></i>
+                <div class="admin-stat-number">@ViewData["TodayBookings"]</div>
+                <div class="admin-stat-label">Today's Bookings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="admin-card">
+            <div class="admin-stat">
+                <i class="fas fa-book fa-2x text-accent mb-2"></i>
+                <div class="admin-stat-number">@ViewData["TotalBookings"]</div>
+                <div class="admin-stat-label">Total Bookings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="admin-card">
+            <div class="admin-stat">
+                <i class="fas fa-utensils fa-2x text-accent mb-2"></i>
+                <div class="admin-stat-number">@ViewData["MenuItems"]</div>
+                <div class="admin-stat-label">Menu Items</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="admin-card">
+            <div class="admin-stat">
+                <i class="fas fa-envelope fa-2x text-accent mb-2"></i>
+                <div class="admin-stat-number">@ViewData["UnreadMessages"]</div>
+                <div class="admin-stat-label">Unread Messages</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Bookings -->
+<div class="admin-card p-4">
+    <h5 class="mb-3"><i class="fas fa-list me-2"></i> Today's Bookings</h5>
+    
+    @if (ViewData["RecentBookings"] is IEnumerable<OwlCafe.Models.Booking> bookings && bookings.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Guests</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in bookings)
+                    {
+                        <tr>
+                            <td>@booking.CustomerName</td>
+                            <td>@booking.Email</td>
+                            <td>@booking.Phone</td>
+                            <td>@booking.Guests</td>
+                            <td>@booking.BookingTime.ToString("hh\\:mm")</td>
+                            <td>
+                                <span class="badge bg-@(booking.Status == OwlCafe.Models.BookingStatus.Approved ? "success" : booking.Status == OwlCafe.Models.BookingStatus.Pending ? "warning" : "danger")">
+                                    @booking.Status
+                                </span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Bookings", new { area = "Admin", id = booking.Id })" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No bookings for today.</p>
+    }
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="admin-card p-4">
+            <h5 class="mb-3">Quick Links</h5>
+            <a href="@Url.Action("Create", "MenuItems", new { area = "Admin" })" class="btn btn-outline-primary btn-sm mb-2 w-100">
+                <i class="fas fa-plus me-2"></i> Add Menu Item
+            </a>
+            <a href="@Url.Action("Create", "Categories", new { area = "Admin" })" class="btn btn-outline-primary btn-sm mb-2 w-100">
+                <i class="fas fa-plus me-2"></i> Add Category
+            </a>
+            <a href="@Url.Action("Index", "Bookings", new { area = "Admin" })" class="btn btn-outline-primary btn-sm w-100">
+                <i class="fas fa-calendar me-2"></i> View All Bookings
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="admin-card p-4">
+            <h5 class="mb-3">System Info</h5>
+            <p class="mb-1"><strong>Categories:</strong> @ViewData["Categories"]</p>
+            <p class="mb-1"><strong>Tables:</strong> @ViewData["Tables"]</p>
+            <p class="mb-1"><strong>Menu Items:</strong> @ViewData["MenuItems"]</p>
+        </div>
+    </div>
+</div>

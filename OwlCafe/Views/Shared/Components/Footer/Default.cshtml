@@ -1,0 +1,14 @@
+﻿@model OwlCafe.Models.WebsiteSetting;
+
+<div class="col-md-4">
+    <h5>Contact</h5>
+
+    @if (Model != null)
+    {
+        <p>
+            📍 @Model.Address <br />
+            📞 @Model.Phone <br />
+            ✉️ @Model.Email
+        </p>
+    }
+</div>

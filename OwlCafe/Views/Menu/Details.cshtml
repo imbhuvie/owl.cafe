@@ -1,0 +1,56 @@
+@model OwlCafe.Models.MenuItem
+
+@{
+    ViewData["Title"] = $"{Model.Name} - Owl Cafe";
+    var imageUrl = string.IsNullOrWhiteSpace(Model.Image) ? null : Model.Image;
+}
+
+<section class="container py-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+            @if (imageUrl != null)
+            {
+                <img src="@imageUrl" alt="@Model.Name" class="img-fluid rounded shadow" style="width: 100%; max-height: 520px; object-fit: cover;" loading="lazy">
+            }
+            else
+            {
+                <div class="menu-image-placeholder" style="min-height: 420px;">
+                    <i class="fas fa-utensils fa-4x"></i>
+                </div>
+            }
+        </div>
+        <div class="col-lg-6">
+            <div class="menu-card-category">@Model.Category?.Name</div>
+            <h1 class="mb-3">@Model.Name</h1>
+            <p class="lead">@Model.Description</p>
+
+            <div class="d-flex flex-wrap align-items-center gap-3 my-4">
+                @if (Model.DiscountPrice.HasValue)
+                {
+                    <span class="menu-card-price">@Model.DiscountPrice.Value.ToRupees()</span>
+                    <span class="text-muted text-decoration-line-through">@Model.Price.ToRupees()</span>
+                }
+                else
+                {
+                    <span class="menu-card-price">@Model.Price.ToRupees()</span>
+                }
+                <span class="menu-card-badge @(Model.IsVeg ? "badge-veg" : "badge-non-veg")">
+                    @(Model.IsVeg ? "Veg" : "Non-Veg")
+                </span>
+                <span class="badge bg-@(Model.IsAvailable ? "success" : "secondary")">
+                    @(Model.IsAvailable ? "Available" : "Currently Unavailable")
+                </span>
+            </div>
+
+            @if (Model.PreparationTime > 0)
+            {
+                <p><i class="fas fa-clock text-accent me-2"></i>Estimated preparation: @Model.PreparationTime minutes</p>
+            }
+
+            <div class="mt-4">
+                <a href="@Url.Action("Create", "Booking")" class="btn btn-primary">Book a Table</a>
+                <a href="@Url.Action("Index", "Menu")" class="btn btn-secondary">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+</section>

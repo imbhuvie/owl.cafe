@@ -1,0 +1,101 @@
+@model OwlCafe.Models.WebsiteSetting
+
+@{
+    ViewData["Title"] = "Website Settings";
+}
+
+<div class="admin-card p-4">
+    <h5 class="mb-4">Website Settings</h5>
+
+    <form method="post" action="@Url.Action("Update", "Settings", new { area = "Admin" })">
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="RestaurantName">Restaurant Name</label>
+                    <input type="text" class="form-control" id="RestaurantName" name="RestaurantName" value="@Model?.RestaurantName" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Phone">Phone</label>
+                    <input type="tel" class="form-control" id="Phone" name="Phone" value="@Model?.Phone">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" id="Email" name="Email" value="@Model?.Email">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Logo">Logo URL</label>
+                    <input type="url" class="form-control" id="Logo" name="Logo" value="@Model?.Logo">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Address">Address</label>
+            <input type="text" class="form-control" id="Address" name="Address" value="@Model?.Address">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="OpeningHours">Opening Hours</label>
+            <input type="text" class="form-control" id="OpeningHours" name="OpeningHours" placeholder="e.g., 11:00 AM - 11:00 PM" value="@Model?.OpeningHours">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Facebook">Facebook URL</label>
+                    <input type="url" class="form-control" id="Facebook" name="Facebook" value="@Model?.Facebook">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Instagram">Instagram URL</label>
+                    <input type="url" class="form-control" id="Instagram" name="Instagram" value="@Model?.Instagram">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="WhatsApp">WhatsApp Number</label>
+                    <input type="tel" class="form-control" id="WhatsApp" name="WhatsApp" value="@Model?.WhatsApp">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="GoogleMap">Google Map Embed Code</label>
+                    <input type="text" class="form-control" id="GoogleMap" name="GoogleMap" placeholder="Paste iframe embed code" value="@Model?.GoogleMap">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="SEODescription">SEO Description</label>
+            <textarea class="form-control" id="SEODescription" name="SEODescription" rows="3">@Model?.SEODescription</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="SEOKeywords">SEO Keywords</label>
+            <textarea class="form-control" id="SEOKeywords" name="SEOKeywords" rows="2">@Model?.SEOKeywords</textarea>
+        </div>
+
+        @if (Model?.Id > 0)
+        {
+            <input type="hidden" name="Id" value="@Model.Id" />
+        }
+
+        <div>
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+    </form>
+</div>

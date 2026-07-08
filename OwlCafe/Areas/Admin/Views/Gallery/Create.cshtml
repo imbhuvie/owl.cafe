@@ -1,0 +1,50 @@
+@model OwlCafe.Models.GalleryImage
+
+@{
+    var modelId = Model?.Id ?? 0;
+    ViewData["Title"] = modelId == 0 ? "Add Gallery Image" : "Edit Gallery Image";
+}
+
+<div class="admin-card p-4" style="max-width: 600px;">
+    <h5 class="mb-4">@ViewData["Title"]</h5>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group mb-3">
+            <label for="Title">Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model?.Title" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Image">Image URL</label>
+            <input type="url" class="form-control" id="Image" name="Image" value="@Model?.Image" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Category">Category</label>
+            <input type="text" class="form-control" id="Category" name="Category" placeholder="e.g., Restaurant, Dishes, Chef" value="@Model?.Category">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="DisplayOrder">Display Order</label>
+            <input type="number" class="form-control" id="DisplayOrder" name="DisplayOrder" value="@Model?.DisplayOrder">
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="Status" name="Status" @(Model?.Status == true ? "checked" : "")>
+            <label class="form-check-label" for="Status">
+                Active
+            </label>
+        </div>
+
+        @if (modelId > 0)
+        {
+            <input type="hidden" name="Id" value="@modelId" />
+        }
+
+        <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="@Url.Action("Index", "Gallery", new { area = "Admin" })" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

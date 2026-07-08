@@ -1,0 +1,45 @@
+@model OwlCafe.DTOs.BookingStatusLookupDto
+
+@{
+    ViewData["Title"] = "Check Booking Status - Owl Cafe";
+}
+
+<section class="hero" style="height: 42vh; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+    <div class="hero-content">
+        <h1 class="text-accent">Check Booking Status</h1>
+        <p class="subtitle">Use your confirmation number and phone or email</p>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="glass-card" style="background: rgba(255, 255, 255, 0.95); color: var(--text-dark);">
+                <h3 class="mb-4">Find Your Reservation</h3>
+
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group">
+                        <label asp-for="BookingId"></label>
+                        <input asp-for="BookingId" class="form-control" min="1" placeholder="Example: 00000012" />
+                        <span asp-validation-for="BookingId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Contact"></label>
+                        <input asp-for="Contact" class="form-control" placeholder="Phone number or email used for booking" />
+                        <span asp-validation-for="Contact" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Check Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

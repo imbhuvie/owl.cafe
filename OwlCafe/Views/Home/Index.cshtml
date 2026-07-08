@@ -1,0 +1,130 @@
+﻿@model IEnumerable<OwlCafe.Models.MenuItem>
+
+@{
+    ViewData["Title"] = "Home - Owl Cafe";
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="text-accent">Owl Cafe</h1>
+        <p class="subtitle">Experience Fine Dining at Its Finest</p>
+        <div class="btn-group">
+            <a href="@Url.Action("Create", "Booking")" class="btn btn-primary">Book a Table</a>
+            <a href="@Url.Action("Index", "Menu")" class="btn btn-secondary">Explore Menu</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Dishes -->
+<section class="container py-5">
+    <div class="section-title">
+        <h2>Featured Dishes</h2>
+        <div class="accent-line mx-auto"></div>
+    </div>
+
+    <div class="row">
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="menu-card">
+                        <a class="menu-card-image" href="@Url.Action("Details", "Menu", new { id = item.Id })" aria-label="View @item.Name details">
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="@item.Image" alt="@item.Name" loading="lazy">
+                            }
+                            else
+                            {
+                                <div class="menu-image-placeholder">
+                                    <i class="fas fa-utensils fa-3x"></i>
+                                </div>
+                            }
+                        </a>
+                        <div class="menu-card-body">
+                            <div class="menu-card-category">@item.Category?.Name</div>
+                            <h3 class="menu-card-title">
+                                <a href="@Url.Action("Details", "Menu", new { id = item.Id })">@item.Name</a>
+                            </h3>
+                            <p class="menu-card-description">@(item.Description.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)</p>
+                            <div class="menu-card-footer">
+                                @if (item.DiscountPrice.HasValue)
+                                {
+                                    <span>
+                                        <span class="menu-card-price">@item.DiscountPrice.Value.ToRupees()</span>
+                                        <small class="text-muted text-decoration-line-through ms-1">@item.Price.ToRupees()</small>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="menu-card-price">@item.Price.ToRupees()</span>
+                                }
+                                <span class="menu-card-badge @(item.IsVeg ? "badge-veg" : "badge-non-veg")">
+                                    @(item.IsVeg ? "Veg" : "Non-Veg")
+                                </span>
+                            </div>
+                            <a href="@Url.Action("Details", "Menu", new { id = item.Id })" class="btn btn-secondary btn-sm mt-3">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="container py-5" style="background-color: var(--cream-dark); border-radius: 20px; margin: 3rem 0; padding: 3rem 2rem;">
+    <div class="section-title">
+        <h2>Why Choose Owl Cafe?</h2>
+        <div class="accent-line mx-auto"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 text-center mb-4">
+            <i class="fas fa-utensils fa-3x text-accent mb-3"></i>
+            <h4>Premium Cuisine</h4>
+            <p>Expertly prepared dishes using the finest ingredients</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <i class="fas fa-star fa-3x text-accent mb-3"></i>
+            <h4>Exceptional Service</h4>
+            <p>Dedicated staff ensuring a memorable experience</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <i class="fas fa-home fa-3x text-accent mb-3"></i>
+            <h4>Elegant Ambiance</h4>
+            <p>Sophisticated setting perfect for any occasion</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <i class="fas fa-award fa-3x text-accent mb-3"></i>
+            <h4>Award Winning</h4>
+            <p>Recognized excellence in culinary arts</p>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="hero" style="height: 50vh; background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);">
+    <div class="hero-content">
+        <h2 class="mb-4">Ready to Experience Excellence?</h2>
+        <a href="@Url.Action("Create", "Booking")" class="btn btn-primary btn-lg">Reserve Your Table Today</a>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease';
+                }
+            });
+        });
+
+        document.querySelectorAll('.menu-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+}

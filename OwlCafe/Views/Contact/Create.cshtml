@@ -1,0 +1,92 @@
+@model OwlCafe.Models.WebsiteSetting
+
+@{
+    ViewData["Title"] = "Contact Us - Owl Cafe";
+}
+
+<!-- Contact Hero -->
+<section class="hero" style="height: 50vh; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+    <div class="hero-content">
+        <h1 class="text-accent">Contact Us</h1>
+        <p class="subtitle">We'd Love to Hear From You</p>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="container py-5">
+    <div class="row">
+        <!-- Contact Info -->
+        <div class="col-md-4 mb-4">
+            <div class="glass-card">
+                <h4 class="mb-3"><i class="fas fa-map-marker-alt text-accent me-2"></i>Address</h4>
+                <p>@Model?.Address</p>
+            </div>
+
+            <div class="glass-card">
+                <h4 class="mb-3"><i class="fas fa-phone text-accent me-2"></i>Phone</h4>
+                <p><a href="tel:@Model?.Phone" style="color: var(--text-dark);text-decoration:none;">@Model?.Phone</a></p>
+            </div>
+
+            <div class="glass-card">
+                <h4 class="mb-3"><i class="fas fa-envelope text-accent me-2"></i>Email</h4>
+                <p><a href="mailto:@Model?.Email" style="text-decoration:none;color: var(--text-dark);">@Model?.Email</a></p>
+            </div>
+
+            <div class="glass-card">
+                <h4 class="mb-3"><i class="fas fa-clock text-accent me-2"></i>Hours</h4>
+                <p>@Model?.OpeningHours</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-8">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <form method="post" class="glass-card">
+                <h3 class="mb-4">Send us a Message</h3>
+
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input type="text" class="form-control" id="Name" name="Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" id="Email" name="Email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone">Phone</label>
+                    <input type="tel" class="form-control" id="Phone" name="Phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="Subject">Subject</label>
+                    <input type="text" class="form-control" id="Subject" name="Subject" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Message">Message</label>
+                    <textarea class="form-control" id="Message" name="Message" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+@if (!string.IsNullOrEmpty(Model?.GoogleMap))
+{
+    <section class="container-fluid py-5">
+        <h2 class="text-center mb-4">Find Us Here</h2>
+        @Html.Raw(Model.GoogleMap)
+    </section>
+}

@@ -1,0 +1,53 @@
+@model OwlCafe.Models.ContactMessage
+
+@{
+    ViewData["Title"] = "Message Details";
+}
+
+<div class="admin-card p-4">
+    <div class="mb-4">
+        <h5>Message Details</h5>
+        <hr>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <strong>From:</strong> @Model?.Name
+            <br>
+            <strong>Email:</strong> <a href="mailto:@Model?.Email">@Model?.Email</a>
+            <br>
+            <strong>Phone:</strong> @Model?.Phone
+        </div>
+        <div class="col-md-6 text-end">
+            <strong>Date:</strong> @Model?.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+            <br>
+            <strong>Status:</strong>
+            <span class="badge bg-@(Model?.IsRead == true ? "secondary" : "primary")">
+                @(Model?.IsRead == true ? "Read" : "Unread")
+            </span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="mb-4">
+        <strong>Subject:</strong>
+        <p>@Model?.Subject</p>
+    </div>
+
+    <div class="mb-4">
+        <strong>Message:</strong>
+        <p class="border p-3 rounded">@Model?.Message</p>
+    </div>
+
+    <div>
+        <a href="@Url.Action("Index", "ContactMessages", new { area = "Admin" })" class="btn btn-secondary">Back to Messages</a>
+        <form method="post" action="@Url.Action("Delete", "ContactMessages", new { area = "Admin" })" style="display:inline;">
+            <input type="hidden" name="id" value="@Model?.Id" />
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                Delete Message
+            </button>
+        </form>
+    </div>
+</div>

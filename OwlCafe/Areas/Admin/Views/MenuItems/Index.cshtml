@@ -1,0 +1,116 @@
+@model IEnumerable<OwlCafe.Models.MenuItem>
+
+@{
+    ViewData["Title"] = "Menu Items Management";
+    var currentPage = ViewData["CurrentPage"] as int? ?? 1;
+    var totalPages = ViewData["TotalPages"] as int? ?? 1;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5>Menu Items</h5>
+    <a href="@Url.Action("Create", "MenuItems", new { area = "Admin" })" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i> Add Menu Item
+    </a>
+</div>
+
+<div class="admin-card p-4">
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Type</th>
+                        <th>Available</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.Image))
+                                {
+                                    <img src="@item.Image" alt="@item.Name" style="width: 72px; height: 52px; object-fit: cover; border-radius: 6px;">
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No image</span>
+                                }
+                            </td>
+                            <td>
+                                <strong>@item.Name</strong>
+                                @if (item.IsFeatured)
+                                {
+                                    <span class="badge bg-warning text-dark ms-2">Featured</span>
+                                }
+                            </td>
+                            <td>@(item.Category?.Name ?? "Uncategorized")</td>
+                            <td>
+                                @if (item.DiscountPrice.HasValue)
+                                {
+                                    <span>@item.DiscountPrice.Value.ToRupees()</span>
+                                    <small class="text-muted text-decoration-line-through ms-1">@item.Price.ToRupees()</small>
+                                }
+                                else
+                                {
+                                    <span>@item.Price.ToRupees()</span>
+                                }
+                            </td>
+                            <td>@(item.IsVeg ? "Vegetarian" : "Non-Vegetarian")</td>
+                            <td>
+                                <span class="badge bg-@(item.IsAvailable ? "success" : "secondary")">
+                                    @(item.IsAvailable ? "Yes" : "No")
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-@(item.Status ? "success" : "danger")">
+                                    @(item.Status ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", "MenuItems", new { area = "Admin", id = item.Id })" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="@Url.Action("Edit", "MenuItems", new { area = "Admin", id = item.Id })" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="@Url.Action("Delete", "MenuItems", new { area = "Admin" })" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (totalPages > 1)
+        {
+            <nav aria-label="Menu item pages">
+                <ul class="pagination mb-0">
+                    @for (var page = 1; page <= totalPages; page++)
+                    {
+                        <li class="page-item @(page == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", "MenuItems", new { area = "Admin", page = page })">@(page)</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No menu items found. <a href="@Url.Action("Create", "MenuItems", new { area = "Admin" })">Create one</a></p>
+    }
+</div>

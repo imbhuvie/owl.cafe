@@ -1,0 +1,47 @@
+@model IEnumerable<OwlCafe.Models.GalleryImage>
+
+@{
+    ViewData["Title"] = "Gallery - Owl Cafe";
+}
+
+<!-- Gallery Hero -->
+<section class="hero" style="height: 50vh; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+    <div class="hero-content">
+        <h1 class="text-accent">Gallery</h1>
+        <p class="subtitle">Capturing Moments of Excellence</p>
+    </div>
+</section>
+
+<!-- Gallery Content -->
+<section class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <div class="gallery-grid">
+            @foreach (var image in Model)
+            {
+                <div class="gallery-item">
+                    @if (!string.IsNullOrEmpty(image.Image))
+                    {
+                        <img src="@image.Image" alt="@image.Title" loading="lazy">
+                    }
+                    else
+                    {
+                        <img src="/images/placeholder.jpg" alt="@image.Title">
+                    }
+                    <div class="gallery-overlay">
+                        <div class="text-center text-white">
+                            <h5>@image.Title</h5>
+                            <p>@image.Category</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <p>Gallery images coming soon.</p>
+        </div>
+    }
+</section>

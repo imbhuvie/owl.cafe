@@ -1,0 +1,118 @@
+@model OwlCafe.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Confirmation - Owl Cafe";
+}
+
+<!-- Confirmation Hero -->
+<section class="hero" style="height: 50vh; background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">
+    <div class="hero-content">
+        <i class="fas fa-check-circle fa-5x text-white mb-3"></i>
+        <h1 class="text-white">Booking Confirmed!</h1>
+        <p class="subtitle" style="color: var(--cream);">Your reservation has been received</p>
+    </div>
+</section>
+
+<!-- Confirmation Details -->
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card" style="background: rgba(255, 255, 255, 0.95); color: var(--text-dark);">
+                <h3 class="mb-4 text-center">Reservation Details</h3>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Confirmation Number</strong>
+                        <p style="color: var(--accent-gold); font-size: 1.3rem;">@Model.Id.ToString("D8")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Status</strong>
+                        <p>
+                            <span class="badge bg-@(Model.Status == OwlCafe.Models.BookingStatus.Approved ? "success" : Model.Status == OwlCafe.Models.BookingStatus.Pending ? "warning text-dark" : Model.Status == OwlCafe.Models.BookingStatus.Completed ? "info text-dark" : "danger") fs-6">
+                                @(Model.Status == OwlCafe.Models.BookingStatus.Pending ? "Pending Confirmation" : Model.Status.ToString())
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Guest Name</strong>
+                        <p>@Model.CustomerName</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Email</strong>
+                        <p>@Model.Email</p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Phone</strong>
+                        <p>@Model.Phone</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Number of Guests</strong>
+                        <p>@Model.Guests</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Date</strong>
+                        <p>@Model.BookingDate.ToString("dddd, MMMM d, yyyy")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Time</strong>
+                        <p>@Model.BookingTime.ToString("hh\\:mm")</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.SpecialRequest))
+                {
+                    <div class="mb-3">
+                        <strong>Special Requests</strong>
+                        <p>@Model.SpecialRequest</p>
+                    </div>
+                }
+
+                <hr>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>Important:</strong> Your booking is pending admin confirmation. You will receive an email confirmation shortly. 
+                    Please arrive 10 minutes early.
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
+                    <a href="@Url.Action("Status", "Booking")" class="btn btn-secondary">Check Status Later</a>
+                    <a href="@Url.Action("Index", "Menu")" class="btn btn-secondary">Browse Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Info -->
+<section class="container py-5" style="background-color: var(--cream-dark); border-radius: 20px; margin: 2rem 0; padding: 3rem 2rem;">
+    <h3 class="text-center mb-4">What's Next?</h3>
+    <div class="row">
+        <div class="col-md-4 text-center mb-3">
+            <h5>1. Confirmation Email</h5>
+            <p>We'll send you an email confirming your reservation details within 24 hours.</p>
+        </div>
+        <div class="col-md-4 text-center mb-3">
+            <h5>2. Prepare Yourself</h5>
+            <p>Check our menu and get ready for an unforgettable dining experience.</p>
+        </div>
+        <div class="col-md-4 text-center mb-3">
+            <h5>3. Arrive Early</h5>
+            <p>Please arrive 10 minutes before your reserved time to enjoy our hospitality.</p>
+        </div>
+    </div>
+</section>

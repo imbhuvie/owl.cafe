@@ -1,0 +1,68 @@
+@model IEnumerable<OwlCafe.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5>Bookings</h5>
+    <div class="btn-group" role="group">
+        <a href="@Url.Action("Index", "Bookings", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">All</a>
+        <a href="@Url.Action("Index", "Bookings", new { area = "Admin", status = "Pending" })" class="btn btn-sm btn-outline-primary">Pending</a>
+        <a href="@Url.Action("Index", "Bookings", new { area = "Admin", status = "Approved" })" class="btn btn-sm btn-outline-primary">Approved</a>
+    </div>
+</div>
+
+<div class="admin-card p-4">
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Email</th>
+                        <th>Date & Time</th>
+                        <th>Guests</th>
+                        <th>Table</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td><strong>@booking.CustomerName</strong></td>
+                            <td>@booking.Email</td>
+                            <td>@booking.BookingDate.ToString("MMM dd") - @booking.BookingTime.ToString("hh\\:mm")</td>
+                            <td>@booking.Guests</td>
+                            <td>@(booking.Table?.TableNumber ?? 0)</td>
+                            <td>
+                                <span class="badge bg-@(booking.Status == OwlCafe.Models.BookingStatus.Approved ? "success" : booking.Status == OwlCafe.Models.BookingStatus.Pending ? "warning" : booking.Status == OwlCafe.Models.BookingStatus.Completed ? "info" : "danger")">
+                                    @booking.Status
+                                </span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Bookings", new { area = "Admin", id = booking.Id })" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="@Url.Action("Delete", "Bookings", new { area = "Admin" })" style="display:inline;">
+                                    <input type="hidden" name="id" value="@booking.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No bookings found.</p>
+    }
+</div>

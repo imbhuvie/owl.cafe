@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin - Owl Cafe</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" style="width: 250px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--cream); min-height: 100vh; padding: 2rem 0; position: fixed; left: 0; top: 0; overflow-y: auto;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(212, 165, 116, 0.3); margin-bottom: 1rem;">
+            <h4 style="color: var(--accent-gold); margin: 0; font-family: 'Playfair Display', serif;"><i class="fas fa-leaf"></i> Owl Admin</h4>
+        </div>
+        
+        <nav class="nav flex-column">
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" 
+               href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-chart-line me-2"></i> Dashboard
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active" : "")" 
+               href="@Url.Action("Index", "Categories", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-list me-2"></i> Categories
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MenuItems" ? "active" : "")" 
+               href="@Url.Action("Index", "MenuItems", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-utensils me-2"></i> Menu Items
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tables" ? "active" : "")" 
+               href="@Url.Action("Index", "Tables", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-chair me-2"></i> Tables
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Bookings" ? "active" : "")" 
+               href="@Url.Action("Index", "Bookings", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-calendar me-2"></i> Bookings
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Gallery" ? "active" : "")" 
+               href="@Url.Action("Index", "Gallery", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-images me-2"></i> Gallery
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ContactMessages" ? "active" : "")" 
+               href="@Url.Action("Index", "ContactMessages", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-envelope me-2"></i> Messages
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")" 
+               href="@Url.Action("Index", "Settings", new { area = "Admin" })" style="color: var(--cream); padding: 0.75rem 1.5rem; border-left: 3px solid transparent; margin: 0.25rem 0; transition: all 0.3s ease;">
+                <i class="fas fa-cog me-2"></i> Settings
+            </a>
+        </nav>
+
+        <div style="border-top: 1px solid rgba(212, 165, 116, 0.3); margin-top: 2rem; padding-top: 1rem;">
+            <a href="#" onclick="document.getElementById('logoutForm').submit();" class="nav-link" style="color: var(--cream); padding: 0.75rem 1.5rem;">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div style="margin-left: 250px; flex: 1; background-color: var(--cream);">
+        <!-- Top Navbar -->
+        <div style="background: var(--white); border-bottom: 1px solid var(--cream-dark); padding: 1rem 2rem; box-shadow: var(--shadow-sm);" class="d-flex justify-content-between align-items-center">
+            <h5 style="margin: 0;">@ViewData["Title"]</h5>
+            <div>
+                <span class="me-3">Welcome, <strong>@User.Identity?.Name</strong></span>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div style="padding: 2rem;">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Hidden Logout Form -->
+    <form id="logoutForm" method="post" asp-area="" asp-controller="Account" asp-action="Logout" style="display:none;">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
