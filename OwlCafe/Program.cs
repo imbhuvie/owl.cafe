@@ -1,22 +1,26 @@
+using FluentValidation;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using OwlCafe.Data;
+using OwlCafe.DTOs;
 using OwlCafe.Models;
 using OwlCafe.Repositories;
 using OwlCafe.Repositories.Interfaces;
-using OwlCafe.Services;
 using OwlCafe.Validators;
-using OwlCafe.DTOs;
-using FluentValidation;
+using Serilog;
 
 // Configure Serilog
+//Log.Logger = new LoggerConfiguration()
+//    .MinimumLevel.Information()
+//    .WriteTo.Console()
+//    .WriteTo.File("logs/owl-cafe-.txt", rollingInterval: RollingInterval.Day)
+//    .CreateLogger();
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
-    .WriteTo.File("logs/owl-cafe-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
-
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -56,18 +60,18 @@ try
     builder.Services.AddScoped<IWebsiteSettingRepository, WebsiteSettingRepository>();
 
     // Add Services
-    builder.Services.AddScoped<DatabaseSeedingService>();
+    //builder.Services.AddScoped<DatabaseSeedingService>();
 
     builder.Services.AddControllersWithViews();
 
     var app = builder.Build();
 
-    // Seed database
-    using (var scope = app.Services.CreateScope())
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
     {
-        var seedingService = scope.ServiceProvider.GetRequiredService<DatabaseSeedingService>();
-        await seedingService.InitializeDatabaseAsync();
-    }
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                           ForwardedHeaders.XForwardedProto
+    });
+
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
